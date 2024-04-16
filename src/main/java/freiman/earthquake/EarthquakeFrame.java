@@ -66,8 +66,8 @@ public class EarthquakeFrame extends JFrame {
                             latitude = feature.geometry.coordinates[1];
 
                             String url = "http://www.google.com/maps/place/" + latitude + "," + longitude;
-                            if (Desktop.isDesktopSupported() &&
-                                    Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                            if (Desktop.isDesktopSupported()
+                                    && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
                                 try {
                                     Desktop.getDesktop().browse(new URI(url));
                                 } catch (IOException | URISyntaxException ex) {
