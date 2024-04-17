@@ -19,7 +19,6 @@ import java.net.URISyntaxException;
 public class EarthquakeFrame extends JFrame {
 
     private JList<String> jlist = new JList<>();
-    private ListSelectionModel listSelectionModel;
     private EarthquakeService service = new EarthquakeServiceFactory().getService();
     private FeatureCollection featureCollection;
 
@@ -34,9 +33,7 @@ public class EarthquakeFrame extends JFrame {
 
         // Create the radio buttons and add to a group
         JRadioButton lastHour = new JRadioButton("One Hour");
-        lastHour.setActionCommand("lastHour");
         JRadioButton lastMonth = new JRadioButton("30 Days");
-        lastMonth.setActionCommand("lastMonth");
 
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(lastHour);
@@ -49,7 +46,7 @@ public class EarthquakeFrame extends JFrame {
         lastHour.addActionListener(e -> hourActionHandler(e));
         lastMonth.addActionListener(e -> monthActionHandler(e));
 
-        listSelectionModel = jlist.getSelectionModel();
+        ListSelectionModel listSelectionModel = jlist.getSelectionModel();
         listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listSelectionModel.addListSelectionListener(
                 new ListSelectionListener() {
