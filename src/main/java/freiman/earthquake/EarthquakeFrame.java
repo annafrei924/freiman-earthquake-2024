@@ -9,7 +9,6 @@ import freiman.earthquake.json.FeatureCollection;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.plaf.basic.BasicListUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -88,6 +87,7 @@ public class EarthquakeFrame extends JFrame {
                             this::handleResponse,
                             Throwable::printStackTrace);
     }
+
     private void hourActionHandler(ActionEvent e) {
         Disposable disposable = service.oneHour()
                     .subscribeOn(Schedulers.io())
@@ -96,6 +96,7 @@ public class EarthquakeFrame extends JFrame {
                             this::handleResponse,
                             Throwable::printStackTrace);
     }
+
     private void handleResponse(FeatureCollection response) {
         featureCollection = response;
         String[] listData = new String[response.features.length];
