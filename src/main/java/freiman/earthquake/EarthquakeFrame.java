@@ -22,9 +22,6 @@ public class EarthquakeFrame extends JFrame {
     private JList<String> jlist = new JList<>();
     private ListSelectionModel listSelectionModel;
     private EarthquakeService service = new EarthquakeServiceFactory().getService();
-
-    private Double longitude;
-    private Double latitude;
     private FeatureCollection featureCollection;
 
     public EarthquakeFrame() {
@@ -50,8 +47,8 @@ public class EarthquakeFrame extends JFrame {
         radioButtonPanel.add(lastHour);
         radioButtonPanel.add(lastMonth);
 
-        lastHour.addActionListener(e -> radioActionHandler(e));
-        lastMonth.addActionListener(e -> radioActionHandler(e));
+        lastHour.addActionListener(e -> hourActionHandler(e));
+        lastMonth.addActionListener(e -> monthActionHandler(e));
 
         listSelectionModel = jlist.getSelectionModel();
         listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -62,8 +59,8 @@ public class EarthquakeFrame extends JFrame {
 
                         if (selIndex != -1) {
                             Feature feature = featureCollection.features[selIndex];
-                            longitude = feature.geometry.coordinates[0];
-                            latitude = feature.geometry.coordinates[1];
+                            double longitude = feature.geometry.coordinates[0];
+                            double latitude = feature.geometry.coordinates[1];
 
                             String url = "http://www.google.com/maps/place/" + latitude + "," + longitude;
                             if (Desktop.isDesktopSupported()
@@ -83,26 +80,22 @@ public class EarthquakeFrame extends JFrame {
         add(jlist, BorderLayout.CENTER);
     }
 
-    private void radioActionHandler(ActionEvent e) {
-        String actionCommand = e.getActionCommand();
-        if ("lastHour".equals(actionCommand)) {
-            Disposable disposable = service.oneHour()
+    private void monthActionHandler(ActionEvent e) {
+        Disposable disposable = service.topMonth()
                     .subscribeOn(Schedulers.io())
                     .observeOn(SwingSchedulers.edt())
                     .subscribe(
                             this::handleResponse,
                             Throwable::printStackTrace);
-
-        } else if ("lastMonth".equals(actionCommand)) {
-            Disposable disposable = service.topMonth()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(SwingSchedulers.edt())
-                    .subscribe(
-                            this::handleResponse,
-                            Throwable::printStackTrace);
-        }
     }
-
+    private void hourActionHandler(ActionEvent e) {
+        Disposable disposable = service.oneHour()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(SwingSchedulers.edt())
+                    .subscribe(
+                            this::handleResponse,
+                            Throwable::printStackTrace);
+    }
     private void handleResponse(FeatureCollection response) {
         featureCollection = response;
         String[] listData = new String[response.features.length];
